@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mosque Prep Checklist</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mosque Prep">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#5a0a0a">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --maroon: #6b1010;
+    --maroon-light: #8b2020;
+    --cream: #fdf5e6;
+    --cream-dark: #f0e0c8;
+    --green: #22c55e;
+    --green-bg: #dcfce7;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --text-muted: #6b7280;
+    --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.08);
+    --radius: 16px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f0e8;
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .hero {
+    background: linear-gradient(135deg, #5a0a0a 0%, #8b1a1a 50%, #6b1010 100%);
+    color: var(--cream);
+    padding: 40px 24px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .logo {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 16px;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+  }
+  .hero .dept {
+    font-size: 15px;
+    opacity: 0.8;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+  .hero .subtitle {
+    font-size: 13px;
+    opacity: 0.55;
+    margin-top: 8px;
+    font-weight: 300;
+  }
+
+  .container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+
+  .progress-bar-container {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 20px;
+    margin: -24px 16px 20px;
+    max-width: 928px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 8px;
+    z-index: 10;
+    box-shadow: var(--shadow-lg);
+    position: sticky;
+  }
+  .progress-info { display: flex; flex-direction: column; gap: 2px; white-space: nowrap; }
+  .progress-count { font-weight: 700; font-size: 15px; color: var(--text); }
+  .progress-pct { font-size: 12px; color: var(--text-muted); }
+  .progress-track {
+    flex: 1;
+    background: #f3f4f6;
+    border-radius: 100px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--maroon), var(--maroon-light));
+    border-radius: 100px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0%;
+  }
+  .progress-fill.complete { background: linear-gradient(90deg, #16a34a, #22c55e); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    padding-bottom: 24px;
+    margin-top: 4px;
+  }
+
+  .category {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+    transition: box-shadow 0.2s ease;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .category:hover { box-shadow: var(--shadow-lg); }
+  .category.full-width { grid-column: 1 / -1; }
+  .category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f3f4f6;
+  }
+  .category-header h2 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cat-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f5e0e0, #f9eded);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .cat-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 100px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .cat-badge.done { background: var(--green-bg); color: #16a34a; }
+
+  .item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    margin: 2px 0;
+    border-radius: 10px;
+    transition: background 0.15s ease;
+    cursor: pointer;
+  }
+  .item:active { background: #f9fafb; }
+
+  .checkbox-wrapper {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .checkbox-wrapper input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    z-index: 1;
+    margin: 0;
+  }
+  .checkmark {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: white;
+  }
+  .checkmark svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.2s ease;
+  }
+  .checkbox-wrapper input:checked + .checkmark {
+    background: var(--maroon);
+    border-color: var(--maroon);
+  }
+  .checkbox-wrapper input:checked + .checkmark svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .item label {
+    cursor: pointer;
+    line-height: 1.5;
+    font-size: 14.5px;
+    color: var(--text);
+    transition: color 0.2s, opacity 0.2s;
+    flex: 1;
+  }
+  .item.checked label { color: #9ca3af; text-decoration: line-through; }
+
+  .note {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-left: 46px;
+    margin-top: -4px;
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+  .section-label {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--maroon);
+    padding: 10px 0 2px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .section-label.sub-section {
+    font-size: 12px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .actions {
+    text-align: center;
+    padding: 8px 16px 32px;
+  }
+  .actions button {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px solid #e5e7eb;
+    padding: 12px 32px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  .actions button:hover { border-color: var(--maroon); color: var(--maroon); }
+
+  @media (max-width: 768px) {
+    .hero { padding: 32px 20px 44px; }
+    .hero h1 { font-size: 22px; }
+    .logo { width: 60px; height: 60px; margin-bottom: 12px; }
+    .progress-bar-container {
+      margin: -28px 12px 16px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      flex-wrap: wrap;
+    }
+    .container { padding: 0 12px; }
+    .grid { grid-template-columns: 1fr; gap: 12px; }
+    .category { padding: 18px 16px; border-radius: 14px; }
+    .category.full-width { grid-column: auto; }
+    .item { padding: 12px 10px; gap: 12px; }
+    .note { margin-left: 38px; }
+    .checkbox-wrapper, .checkmark { width: 26px; height: 26px; }
+    .checkmark svg { width: 16px; height: 16px; }
+    .item label { font-size: 15px; }
+    .note { margin-left: 38px; }
+    .actions button { width: 100%; padding: 14px; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-content">
+    <svg class="logo" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Shield shape -->
+      <path d="M100 10 L185 50 L185 120 Q185 180 100 210 Q15 180 15 120 L15 50 Z" fill="rgba(255,220,180,0.12)" stroke="rgba(255,220,180,0.5)" stroke-width="3"/>
+      <!-- Inner shield -->
+      <path d="M100 25 L172 58 L172 118 Q172 170 100 198 Q28 170 28 118 L28 58 Z" fill="none" stroke="rgba(255,220,180,0.25)" stroke-width="1.5"/>
+      <!-- Tree trunk -->
+      <line x1="100" y1="180" x2="100" y2="100" stroke="rgba(255,220,180,0.7)" stroke-width="4" stroke-linecap="round"/>
+      <!-- Tree branches -->
+      <line x1="100" y1="140" x2="75" y2="115" stroke="rgba(255,220,180,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="100" y1="140" x2="125" y2="115" stroke="rgba(255,220,180,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+      <line x1="100" y1="120" x2="68" y2="90" stroke="rgba(255,220,180,0.5)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="100" y1="120" x2="132" y2="90" stroke="rgba(255,220,180,0.5)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="100" y1="105" x2="80" y2="75" stroke="rgba(255,220,180,0.4)" stroke-width="2" stroke-linecap="round"/>
+      <line x1="100" y1="105" x2="120" y2="75" stroke="rgba(255,220,180,0.4)" stroke-width="2" stroke-linecap="round"/>
+      <!-- Tree crown -->
+      <circle cx="100" cy="68" r="22" fill="rgba(255,220,180,0.15)" stroke="rgba(255,220,180,0.4)" stroke-width="1.5"/>
+      <circle cx="75" cy="85" r="16" fill="rgba(255,220,180,0.1)" stroke="rgba(255,220,180,0.3)" stroke-width="1.5"/>
+      <circle cx="125" cy="85" r="16" fill="rgba(255,220,180,0.1)" stroke="rgba(255,220,180,0.3)" stroke-width="1.5"/>
+      <circle cx="65" cy="105" r="12" fill="rgba(255,220,180,0.08)" stroke="rgba(255,220,180,0.25)" stroke-width="1"/>
+      <circle cx="135" cy="105" r="12" fill="rgba(255,220,180,0.08)" stroke="rgba(255,220,180,0.25)" stroke-width="1"/>
+      <!-- Hands at base -->
+      <path d="M70 170 Q80 160 90 170" stroke="rgba(255,220,180,0.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M110 170 Q120 160 130 170" stroke="rgba(255,220,180,0.5)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+    <h1>Mosque Disaster Prep</h1>
+    <div class="dept">Amoor-e-Amma &middot; General Welfare</div>
+    <div class="subtitle">Shelter-in-Place Preparation Checklist</div>
+  </div>
+</div>
+
+<div class="progress-bar-container">
+  <div class="progress-info">
+    <span class="progress-count" id="progress-text">0 / 0</span>
+    <span class="progress-pct" id="progress-pct">0% complete</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+</div>
+
+<div class="container">
+<div class="grid">
+
+  <!-- FOOD -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#127834;</span> Food</h2>
+      <span class="cat-badge" data-cat="food">0/8</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f1" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f1">Rice</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f2" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f2">Wheat flour</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f3" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f3">Grains: Channa daal, Chickpeas, Lentils</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f4" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f4">Pastas</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f5" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f5">Cooking oil</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f6" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f6">Spices, sugar, salt</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f7" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f7">Powder milk</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="f8" data-cat="food"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="f8">Cereals</label></div>
+  </div>
+
+  <!-- WATER -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128167;</span> Water</h2>
+      <span class="cat-badge" data-cat="water">0/6</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="w1" data-cat="water"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="w1">2L per person per day drinking water</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="w2" data-cat="water"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="w2">Buy water in large containers: 1 gal, 5 gal jugs</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="w3" data-cat="water"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="w3">Encourage reusable cups to reduce trash</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="w4" data-cat="water"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="w4">Install secondary water supply (e.g. water well)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="w5" data-cat="water"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="w5">Water storage tanks (55 gal barrels, 250 gal tanks)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="w6" data-cat="water"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="w6">Water filtration devices</label></div>
+  </div>
+
+  <!-- HYGIENE -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128701;</span> Hygiene</h2>
+      <span class="cat-badge" data-cat="hygiene">0/6</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="h1" data-cat="hygiene"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="h1">Water</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="h2" data-cat="hygiene"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="h2">Soap, shampoo, body wash, toothpaste</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="h3" data-cat="hygiene"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="h3">Toilet paper, paper towels, wet wipes</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="h4" data-cat="hygiene"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="h4">Dish soap, laundry soap, bleach</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="h5" data-cat="hygiene"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="h5">Install showers</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="h6" data-cat="hygiene"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="h6">Install washer &amp; dryer</label></div>
+  </div>
+
+  <!-- SLEEPING -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128716;</span> Sleeping</h2>
+      <span class="cat-badge" data-cat="sleeping">0/3</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="s1" data-cat="sleeping"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="s1">Cots</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="s2" data-cat="sleeping"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="s2">Sleeping bags, blankets</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="s3" data-cat="sleeping"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="s3">Designate separate areas for men and women</label></div>
+  </div>
+
+  <!-- COMMUNICATION -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128225;</span> Communication</h2>
+      <span class="cat-badge" data-cat="comm">0/5</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="c1" data-cat="comm"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="c1">Satellite phone</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="c2" data-cat="comm"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="c2">Satellite internet: Starlink</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="c3" data-cat="comm"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="c3">HAM Radio</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="c4" data-cat="comm"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="c4">AM/FM radio</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="c5" data-cat="comm"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="c5">Walkie-Talkie</label></div>
+  </div>
+
+  <!-- TRANSPORTATION -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128663;</span> Transportation</h2>
+      <span class="cat-badge" data-cat="transport">0/3</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="t1" data-cat="transport"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="t1">Vehicles: SUV, Pickup or Van (members provide)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="t2" data-cat="transport"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="t2">Bicycles (keep on site), spare parts: tubes, tires, pump</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="t3" data-cat="transport"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="t3">Paper maps</label></div>
+  </div>
+
+  <!-- TOOLS -->
+  <div class="category">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128295;</span> Tools</h2>
+      <span class="cat-badge" data-cat="tools">0/12</span>
+    </div>
+    <div class="section-label">Hand Tools</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl1" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl1">Screwdrivers, pliers, wrenches, sockets, hammer, saw, utility knife</label></div>
+    <div class="section-label">Power Tools</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl2" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl2">Drill, impact driver, recip saw, chain saw</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl3" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl3">Pick ax, shovel, wood ax</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl4" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl4">Nails, screws, fasteners</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl5" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl5">Rope, cable, chain, straps</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl6" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl6">Tape, zip ties</label></div>
+    <div class="section-label">Power &amp; Fuel</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl7" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl7">Generator: Standby, Portable, Inverter, Solar</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl8" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl8">Extension cords, power strips</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl9" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl9">Batteries (AAA, AA, C, D, 12 volt)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl10" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl10">Gas cans</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl11" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl11">Propane tanks</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tl12" data-cat="tools"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tl12">Fire extinguishers</label></div>
+  </div>
+
+  <!-- HEALTHCARE -->
+  <div class="category full-width">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#127973;</span> Healthcare</h2>
+      <span class="cat-badge" data-cat="health">0/19</span>
+    </div>
+
+    <div class="section-label">Pain Killers</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc1" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc1">Tylenol 500 mg, 650 mg (extra strength)</label></div>
+    <div class="note">Do not take more than 4 grams per day</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc2" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc2">Children's Tylenol liquid (weight based)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc3" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc3">Ibuprofen/Advil 200 mg</label></div>
+    <div class="note">Max 2400 mg/day. Avoid in children under 12, kidney disease, or ulcer/acidity</div>
+
+    <div class="section-label">Antibiotics</div>
+    <div class="section-label sub-section">Common Sore Throat</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc4" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc4">Augmentin 500/125 mg, 875/125 mg (twice daily, 3-5 days)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc5" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc5">Liquid amoxicillin/clavulanic acid for children under 12</label></div>
+    <div class="note">Smaller dose for kidney disease / low body weight. Avoid if penicillin allergy (use cipro or levofloxacin)</div>
+
+    <div class="section-label sub-section">Pneumonia</div>
+    <div class="note">Fever, cough with phlegm, shortness of breath</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc6" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc6">Augmentin (as above) plus Zpack</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc7" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc7">Or Doxycycline 100 mg twice daily for 5 days</label></div>
+
+    <div class="section-label sub-section">Urine Infection</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc8" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc8">Ciprofloxacin 250 mg, 500 mg (1 tab twice daily, 5 days)</label></div>
+    <div class="note">Weight based liquid for children. Smaller dose for low body weight.</div>
+
+    <div class="section-label">Anti Allergics</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc9" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc9">Benadryl 25 mg, 50 mg (up to 3x/day)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc10" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc10">Zyrtec 5 mg, 10 mg daily</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc11" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc11">Steroids: Medrol dose pack or Prednisone 20-40 mg (5-7 days)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc12" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc12">Albuterol rescue inhaler (1-2 puffs every 4 hrs as needed)</label></div>
+
+    <div class="section-label">Anti Nausea / Vomiting</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc13" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc13">Zofran ODT 4 mg, 8 mg</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc14" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc14">Dramamine for children (OTC)</label></div>
+
+    <div class="section-label">Stomach</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc15" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc15">Tums</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc16" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc16">Pepto</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc17" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc17">Miralax</label></div>
+
+    <div class="section-label">First Aid</div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc18" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc18">First Aid kit (standard, purchase multiples)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="hc19" data-cat="health"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="hc19">Homeopathic kit</label></div>
+  </div>
+
+  <!-- TEAMS -->
+  <div class="category full-width">
+    <div class="category-header">
+      <h2><span class="cat-icon">&#128101;</span> Teams &amp; Organization</h2>
+      <span class="cat-badge" data-cat="teams">0/6</span>
+    </div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tm1" data-cat="teams"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tm1">Cooking team (men's and women's side point persons)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tm2" data-cat="teams"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tm2">Cleaning team (men's and women's side point persons)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tm3" data-cat="teams"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tm3">Discipline team (men's and women's side point persons)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tm4" data-cat="teams"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tm4">Security team (men's and women's side point persons)</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tm5" data-cat="teams"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tm5">Backup members identified for each team</label></div>
+    <div class="item" data-item><div class="checkbox-wrapper"><input type="checkbox" id="tm6" data-cat="teams"><div class="checkmark"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div></div><label for="tm6">Ground rules / expectations created and in place</label></div>
+  </div>
+
+</div>
+</div>
+
+<div class="actions">
+  <button onclick="uncheckAll()">Reset All</button>
+</div>
+
+<script>
+  var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  var saved = JSON.parse(localStorage.getItem('mosquePrep') || '{}');
+
+  checkboxes.forEach(function(cb) {
+    if (saved[cb.id]) {
+      cb.checked = true;
+      cb.closest('.item').classList.add('checked');
+    }
+    cb.addEventListener('change', function() {
+      saved[cb.id] = cb.checked;
+      localStorage.setItem('mosquePrep', JSON.stringify(saved));
+      cb.closest('.item').classList.toggle('checked', cb.checked);
+      updateProgress();
+    });
+  });
+
+  document.querySelectorAll('.item[data-item]').forEach(function(item) {
+    item.addEventListener('click', function(e) {
+      if (e.target.closest('label') || e.target.closest('.checkbox-wrapper')) return;
+      var cb = item.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event('change'));
+    });
+  });
+
+  function updateProgress() {
+    var total = checkboxes.length;
+    var checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    var pct = total ? Math.round(checked / total * 100) : 0;
+    document.getElementById('progress-text').textContent = checked + ' / ' + total;
+    document.getElementById('progress-pct').textContent = pct + '% complete';
+    var fill = document.getElementById('progress-fill');
+    fill.style.width = pct + '%';
+    fill.classList.toggle('complete', pct === 100);
+
+    var cats = {};
+    checkboxes.forEach(function(cb) {
+      var cat = cb.dataset.cat;
+      if (!cats[cat]) cats[cat] = { total: 0, checked: 0 };
+      cats[cat].total++;
+      if (cb.checked) cats[cat].checked++;
+    });
+    document.querySelectorAll('.cat-badge').forEach(function(el) {
+      var cat = el.dataset.cat;
+      if (cats[cat]) {
+        el.textContent = cats[cat].checked + '/' + cats[cat].total;
+        el.classList.toggle('done', cats[cat].checked === cats[cat].total);
+      }
+    });
+  }
+
+  function uncheckAll() {
+    if (!confirm('Reset all checkboxes?')) return;
+    checkboxes.forEach(function(cb) {
+      cb.checked = false;
+      cb.closest('.item').classList.remove('checked');
+    });
+    localStorage.removeItem('mosquePrep');
+    updateProgress();
+  }
+
+  updateProgress();
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+
+</body>
+</html>
